@@ -21,12 +21,17 @@ public class PanelMovement : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-
+        //print(rectTransform.anchoredPosition);
         if (Input.GetMouseButton(0))
         {
-            if(rectTransform.anchoredPosition.x >= -1001 && rectTransform.anchoredPosition.x <= 1001)
+            if(rectTransform.anchoredPosition.x >= -501 && rectTransform.anchoredPosition.x <= 501)
             {
-                Move(moveSpeed, Input.GetAxisRaw("Mouse X"));
+                if (rectTransform.anchoredPosition.y >= -501 && rectTransform.anchoredPosition.y <= 501)
+                {
+                    MoveX(moveSpeed, Input.GetAxisRaw("Mouse X"));
+                    MoveY(moveSpeed, Input.GetAxisRaw("Mouse Y"));
+                }
+                    
             }
 
         }
@@ -55,30 +60,56 @@ public class PanelMovement : MonoBehaviour
                         if ((lp.x > fp.x))  
                         {   
                             Debug.Log("Right Swipe");
-                            Move(moveSpeed, +1);
+                            MoveX(moveSpeed, +1);
                         }
                         else
                         {   
                             Debug.Log("Left Swipe");
-                            Move(moveSpeed, -1);
+                            MoveX(moveSpeed, -1);
+                        }
+                    }
+                    else
+                    {   //the vertical movement is greater than the horizontal movement
+                        if (lp.y > fp.y)  //If the movement was up
+                        {   //Up swipe
+                            Debug.Log("Up Swipe");
+                            MoveY(moveSpeed, +1);
+                        }
+                        else
+                        {   //Down swipe
+                            Debug.Log("Down Swipe");
+                            MoveY(moveSpeed, +1);
                         }
                     }
                 }
             }
         }
 #endif
-        if (rectTransform.anchoredPosition.x <= -1000)
+        if (rectTransform.anchoredPosition.y <= -500 )
         {
-            rectTransform.anchoredPosition = new Vector2(-1000,0);
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, -500);
         }
-        if(rectTransform.anchoredPosition.x >= 1000)
+        if (rectTransform.anchoredPosition.y >= 500)
         {
-            rectTransform.anchoredPosition = new Vector2(1000, 0);
+            rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 500);
+        }
+        if(rectTransform.anchoredPosition.x <= -500)
+        {
+            rectTransform.anchoredPosition = new Vector2(-500,rectTransform.anchoredPosition.y);
+        }
+        if ( rectTransform.anchoredPosition.x >= 500)
+        {
+            rectTransform.anchoredPosition = new Vector2(500, rectTransform.anchoredPosition.y);
         }
     }
-    public void Move(float offset,float sign)
+    public void MoveX(float offset,float sign)
     {
 
         rectTransform.anchoredPosition += sign * Vector2.right * offset;
+    }
+    public void MoveY(float offset, float sign)
+    {
+
+        rectTransform.anchoredPosition += sign * Vector2.up * offset;
     }
 }
